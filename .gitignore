@@ -1,0 +1,6 @@
+# deps
+node_modules/
+
+# Claude Code local settings/session data
+.claude/settings.local.json
+.claude/*.local.json
