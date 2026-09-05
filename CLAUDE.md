@@ -21,7 +21,7 @@ Requires a `.env` file with `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AU
 
 ## Branching
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for the branching strategy: `development` → `release` → `uat` → `production`, with `uat`/`production` merges requiring the repo owner's approval.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the branching strategy: `master` → `release` → `uat` → `production`, with `uat`/`production` merges requiring the repo owner's approval.
 
 ## Architecture
 
