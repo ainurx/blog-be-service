@@ -22,6 +22,12 @@ const blogRepository = {
         return result[0]
     },
 
+    findByTitle: async (title: string) => {
+        const result = await db.select().from(blog).where(eq(blog.title, title))
+
+        return result[0]
+    },
+
     updateById: async (id: number, params: Partial<Omit<TBlog, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>) => {
         const result = await db.update(blog).set(params).where(eq(blog.id, id)).returning()
 

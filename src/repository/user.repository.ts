@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { user } from "../db/schema";
 import { db } from "../db";
 import {TUser} from "../ts/User";
@@ -16,12 +16,18 @@ const userRepository = {
         return result
     },
 
-    // findByParams: async (params: Partial<TUser>) => {
-    //     const wherClause = eq()
-    //     const result = await db.select().from(user).where()
+    findByParams: async (params: Partial<Pick<TUser, 'id' | 'email' | 'name'>>) => {
+        const conditions = []
+        if (params.id) conditions.push(eq(user.id, params.id))
+        if (params.email) conditions.push(eq(user.email, params.email))
+        if (params.name) conditions.push(eq(user.name, params.name))
 
-    //     return result
-    // },
+        if (conditions.length === 0) return []
+
+        const result = await db.select().from(user).where(and(...conditions))
+
+        return result
+    },
 
     findById: async (id: string) => {
         const result = await db.select().from(user).where(eq(user.id, id))

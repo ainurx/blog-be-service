@@ -23,7 +23,7 @@ Requires a `.env` file with `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AU
 
 Layered structure per resource (`blog`, `user`), each following controller → service → repository:
 
-- `src/controller/*.controller.ts` — Hono request handlers, exported as an object of methods (`create`, `findAll`, `findById`, `update`, `delete`, plus `findByParams` for blog). Intended to call the corresponding service.
+- `src/controller/*.controller.ts` — Hono request handlers, checking required fields and calling the corresponding service.
 - `src/service/*.service.ts` — business logic between controllers and repositories.
 - `src/repository/*.repository.ts` — Drizzle queries against the DB, exported as an object of methods (e.g. `userRepository.findById`, `.findByEmail`, `.deleteById`).
 - `src/ts/*.ts` — shared types/enums per resource (`TUser`, `TBlog`, `EGender`), used to type repository/service params instead of inferring from the Drizzle schema directly.

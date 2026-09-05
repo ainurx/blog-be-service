@@ -1,4 +1,5 @@
 import blogRepository from "../repository/blog.repository";
+import { ConflictError, ForbiddenError, NotFoundError } from "../utils/errors";
 
 type BlogInput = {
     title: string;
@@ -11,6 +12,9 @@ type BlogInput = {
 // never from the request body, so a caller can't just claim someone else's id.
 const blogService = {
     create: async (userId: string, data: BlogInput) => {
+        const duplicate = await blogRepository.findByTitle(data.title)
+        if (duplicate) throw new ConflictError('A blog with this title already exists')
+
         return blogRepository.create({ ...data, userId })
     },
 
@@ -19,29 +23,34 @@ const blogService = {
     },
 
     findById: async (id: number) => {
-        return blogRepository.findById(id)
+        const found = await blogRepository.findById(id)
+
+        if (!found) throw new NotFoundError()
+
+        return found
     },
 
     update: async (userId: string, id: number, data: Partial<BlogInput>) => {
         const existing = await blogRepository.findById(id)
 
-        if (!existing) return { error: 'not_found' as const }
-        if (existing.userId !== userId) return { error: 'forbidden' as const }
+        if (!existing) throw new NotFoundError()
+        if (existing.userId !== userId) throw new ForbiddenError()
 
-        const updated = await blogRepository.updateById(id, data)
+        if (data.title && data.title !== existing.title) {
+            const duplicate = await blogRepository.findByTitle(data.title)
+            if (duplicate) throw new ConflictError('A blog with this title already exists')
+        }
 
-        return { data: updated }
+        return blogRepository.updateById(id, data)
     },
 
     delete: async (userId: string, id: number) => {
         const existing = await blogRepository.findById(id)
 
-        if (!existing) return { error: 'not_found' as const }
-        if (existing.userId !== userId) return { error: 'forbidden' as const }
+        if (!existing) throw new NotFoundError()
+        if (existing.userId !== userId) throw new ForbiddenError()
 
-        const data = await blogRepository.deleteById(id)
-
-        return { data }
+        return blogRepository.deleteById(id)
     },
 }
 
