@@ -19,6 +19,10 @@ There are no lint, build, or test scripts configured in `package.json` yet.
 
 Requires a `.env` file with `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL`.
 
+## Branching
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the branching strategy: `development` → `release` → `uat` → `production`, with `uat`/`production` merges requiring the repo owner's approval.
+
 ## Architecture
 
 Layered structure per resource (`blog`, `user`), each following controller → service → repository:
